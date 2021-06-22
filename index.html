@@ -21,43 +21,56 @@
   <body>
     <div class="text-center">
       <h1>Hello, world!</h1>
-      <button type="button" class="btn btn-primary">List albums</button>
-      <button type="button" class="btn btn-success">Count Unique</button>
+      <button type="button" class="btn btn-primary" onclick="getAlbums()">
+        List albums
+      </button>
+      <button type="button" class="btn btn-success" onclick="uniqueCounts()">
+        Count Unique
+      </button>
     </div>
     <div class="row"></div>
 
     <script>
-      fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=eminem", {
-        method: "GET",
-        headers: {
-          "x-rapidapi-key":
-            "77857c6c3amsh6d2be1fc4737c2cp1b198cjsne6e2bff16da9",
-          "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
-        },
-      })
-        .then((resp) => resp.json())
-        .then((eminem) => {
-          const rowAlbum = document.querySelector(".row");
-          console.log("antes do loop");
-          for (let i = 0; i < eminem.data.length; i++) {
-            rowAlbum.insertAdjacentHTML(
-              "beforeend",
-              `<div class="col">
-                <div class="card" style="width: 18rem">
-          <img src="${eminem.data[i].album.cover}" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">${eminem.data[i].title}</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-            </div>`
-            );
-          }
-        });
+      let takeArrays = [];
+      function getAlbums() {
+        fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=eminem", {
+          method: "GET",
+          headers: {
+            "x-rapidapi-key":
+              "77857c6c3amsh6d2be1fc4737c2cp1b198cjsne6e2bff16da9",
+            "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
+          },
+        })
+          .then((resp) => resp.json())
+          .then((eminem) => {
+            const rowAlbum = document.querySelector(".row");
+            for (let i = 0; i < eminem.data.length; i++) {
+              takeArrays.push(eminem.data[i].title);
+              rowAlbum.insertAdjacentHTML(
+                "beforeend",
+                `<div class="col">
+                    <div class="card" style="width: 18rem">
+              <img src="${eminem.data[i].album.cover}" class="card-img-top" alt="..." />
+              <div class="card-body">
+                <h5 class="card-title">${eminem.data[i].title}</h5>
+              </div>
+            </div>
+                </div>`
+              );
+            }
+            // let arrayOfAlbums = [eminem.data];
+            // console.log("array of albums", arrayOfAlbums);
+            // for (let i = 0; i < arrayOfAlbums[0].length; i++) {
+            //   takeArrays.push(arrayOfAlbums[0][i].title);
+            // }
+            // console.log(takeArrays);
+
+            takeArrays = new Set(takeArrays);
+          });
+      }
+      function uniqueCounts() {
+        alert("size is: " + takeArrays.size);
+      }
     </script>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
